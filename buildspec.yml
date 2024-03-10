@@ -1,22 +1,28 @@
 version: 0.2
 
 phases:
+  install:
+    runtime-versions:
+      python: 3.10
   pre_build:
     commands:
-      - echo Updating...
-      - sudo apt-get update -y
-      - echo Installing Docker...
-      - sudo apt-get install -y docker.io
-      - echo Starting the Docker service...
-      - sudo service docker start
+      - echo "Pre Build started on `date`"
+      - echo "Updating system"
+      - apt-get update
   build:
     commands:
-      - echo Building the Docker image...
-      - docker build -t fastApi .
+      - echo "Build started on `date`"
+      - echo "Building the code"
+      - python3 -m pip install --upgrade pip
+      - pip install -r requirements.txt
+      - uvicorn main:app --reload
+  post_build:
+    commands:
+      - echo "Build completed on `date`"
 
 artifacts:
   files:
-    - Dockerfile
-    - main.py
-    - requirements.txt
-  base-directory: /
+    -  main.py
+    -  requirements.txt
+
+    
